@@ -374,63 +374,63 @@ async function editLead(rowIndex) {
     document.getElementById('leadNotes').value = lead.notes;
     openModal('addLeadModal');
 }
-document.getElementById('addLeadForm').addEventListener('submit', async function(e) {
+
+    document.getElementById('addLeadForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const ld = {
-        name: document.getElementById('leadName').value,
-        email:document.getElementById('leadEmail').value,
-        phone:document.getElementById('leadPhone').value,
-        company:document.getElementById('leadCompany').value,
-        status:document.getElementById('leadStatus').value,
-        source:document.getElementById('leadSource').value,
-        notes:document.getElementById('leadNotes').value,
-        dateAdded: new Date().toLocaleDateString(),
-        owner: currentUser.username,
-        project: isAdmin ? prompt("Assign to Project (for ProjectHead enter their project name):", currentUser.project||"") : currentUser.project,
+
+    // Build the Lead object (for both Add and Edit)
+    const leadData = {
+      name: document.getElementById('leadName').value,
+      email: document.getElementById('leadEmail').value,
+      phone: document.getElementById('leadPhone').value,
+      company: document.getElementById('leadCompany').value,
+      status: document.getElementById('leadStatus').value,
+      source: document.getElementById('leadSource').value,
+      notes: document.getElementById('leadNotes').value,
+      dateAdded: (editingLeadIndex && leads.find(l=>l.index===editingLeadIndex)) 
+        ? leads.find(l=>l.index===editingLeadIndex).dateAdded 
+        : new Date().toLocaleDateString(),
+      owner: currentUser.username,
+      project: isAdmin ? prompt("Assign to Project", currentUser.project||"") : currentUser.project,
+      history: []
     };
-    if (!editingLeadIndex) {
-        // Add
-        const historyArr = [{date: ld.dateAdded, action:`Created by ${currentUser.username}`}];
-        try {
-            const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A:K:append?valueInputOption=RAW&key=${apiKey}`, {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({ values: [[
-                    ld.name, ld.email, ld.phone, ld.company, ld.status,
-                    ld.source, ld.notes, ld.dateAdded, ld.owner, ld.project, JSON.stringify(historyArr)
-                ]] })
-            });
-            if (resp.ok) {
-                showAlert('Lead added!','success');
-                closeModal('addLeadModal'); loadLeads();
-            } else throw new Error();
-        } catch(e){ showAlert('Failed to add lead','error'); }
+
+    // Handle history (for tracking edits/creation)
+    if (editingLeadIndex && leads.find(l=>l.index===editingLeadIndex)) {
+      let old = leads.find(l=>l.index===editingLeadIndex);
+      try { leadData.history = JSON.parse(old.history||'[]'); } catch(e){}
+      leadData.history.push({
+        date: new Date().toLocaleString(),
+        action: `Edited by ${currentUser.username}`
+      });
+      leadData.mode = "edit";
+      leadData.row = editingLeadIndex;  // The row number in your Sheet
     } else {
-        // Edit
-        let leadIdx = leads.findIndex(l => l.index === editingLeadIndex);
-        if (leadIdx<0) return showAlert('Lead not found','error');
-        let old = leads[leadIdx], oldHist = [];
-        try{ oldHist = JSON.parse(old.history||'[]'); }catch(_){}
-        let now = new Date().toLocaleDateString();
-        oldHist.push({date: now, action:`Edited by ${currentUser.username}`});
-        const updates = [
-            ld.name, ld.email, ld.phone, ld.company, ld.status,
-            ld.source, ld.notes, old.dateAdded, old.owner, old.project, JSON.stringify(oldHist)
-        ];
-        try {
-            const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A${editingLeadIndex}:K${editingLeadIndex}?valueInputOption=RAW&key=${apiKey}`,{
-                method:'PUT',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({ values: [updates] })
-            });
-            if(resp.ok){
-                showAlert('Lead updated!','success');
-                closeModal('addLeadModal'); loadLeads();
-            } else throw new Error();
-        }catch(e){ showAlert('Failed to update lead','error'); }
+      leadData.history = [{
+        date: new Date().toLocaleString(),
+        action: `Created by ${currentUser.username}`
+      }];
+      leadData.mode = "add";
     }
-    editingLeadIndex=null;
+
+    // Paste your Web App URL here:
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmvQcwZTjvQSXbPLJhF1qQtwtQ4N9SfA1_7aq57zf318cY023Un4ISQA5QmAUU_uS76A/exec";
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(leadData),
+        headers: {'Content-Type': 'application/json'}
+      });
+      showAlert(editingLeadIndex ? 'Lead updated!' : 'Lead added!', 'success');
+      closeModal('addLeadModal');
+      loadLeads();
+    } catch (e) {
+      showAlert('Failed to add/edit lead','error');
+    }
+    editingLeadIndex = null;
 });
+
 // ------ DELETE (soft, sets fields to blank/Deleted) ------
 async function deleteLead(rowIndex) {
     if (!confirm('Are you sure you want to delete this lead?')) return;
