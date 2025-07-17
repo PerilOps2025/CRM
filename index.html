@@ -12,37 +12,16 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width:1200px; margin:0 auto; background:white; border-radius:20px;
-            box-shadow:0 20px 40px rgba(0,0,0,0.1); overflow:hidden;
-        }
-        .header {
-            background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color:white; padding:30px; text-align:center;
-        }
+        .container { max-width:1200px; margin:0 auto; background:white; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.1); overflow:hidden;}
+        .header { background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; padding:30px; text-align:center;}
         .main-content { padding:40px; }
-        .login-section {
-            background: #f8f9fa; padding: 30px; border-radius: 15px;
-            margin-bottom: 30px; border-left: 5px solid #667eea;
-            max-width: 400px; margin: 40px auto 30px auto;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.07);
-        }
+        .login-section { background: #f8f9fa; padding: 30px; border-radius: 15px; margin-bottom: 30px; border-left: 5px solid #667eea; max-width: 400px; margin: 40px auto 30px auto; box-shadow: 0 5px 25px rgba(0,0,0,0.07);}
         .login-title {margin-bottom: 18px; font-size: 1.3em; color: #333;}
         .form-group {margin-bottom: 20px;}
         label {display:block; margin-bottom:8px; font-weight:600; color: #333;}
-        input, select, textarea {
-            width:100%; padding:12px; border:2px solid #e1e5e9;
-            border-radius:8px; font-size:16px; transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline:none; border-color:#667eea;
-        }
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; padding: 12px 30px; border: none; border-radius: 8px;
-            font-size: 16px; cursor: pointer; margin-right: 10px; margin-bottom: 10px;
-            transition:transform 0.2s, box-shadow 0.2s;
-        }
+        input, select, textarea { width:100%; padding:12px; border:2px solid #e1e5e9; border-radius:8px; font-size:16px; transition: border-color 0.3s;}
+        input:focus, select:focus, textarea:focus { outline:none; border-color:#667eea;}
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-right: 10px; margin-bottom: 10px; transition:transform 0.2s, box-shadow 0.2s;}
         .btn:hover {transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
         .btn-secondary {background: #6c757d;}
         .btn-danger {background: #dc3545;}
@@ -54,14 +33,9 @@
         .pagination {text-align:center; margin:14px;}
         .pagination button {margin:0 4px; padding:4px 10px;}
         .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000;}
-        .modal-content {
-            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-            background:white; padding:30px; border-radius:15px; width:90%; max-width:500px;
-            max-height:80vh; overflow-y:auto;
-        }
+        .modal-content { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:30px; border-radius:15px; width:90%; max-width:500px; max-height:80vh; overflow-y:auto;}
         .modal-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
-        .close {font-size:28px; cursor:pointer; color:#999;}
-        .close:hover {color:#333;}
+        .close {font-size:28px; cursor:pointer; color:#999;} .close:hover {color:#333;}
         .alert {padding:15px; margin-bottom: 20px; border-radius:8px;}
         .alert-success {background:#d4edda; color:#155724; border:1px solid #c3e6cb;}
         .alert-error {background:#f8d7da; color:#721c24; border:1px solid #f5c6cb;}
@@ -70,13 +44,9 @@
         .stat-card {background:white; padding:20px; border-radius:10px; text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
         .stat-number {font-size:2em; font-weight:bold; color:#667eea;}
         .stat-label {color:#666; margin-top:5px;}
-        .loading {text-align:center; padding:20px; color:#666;}
         .form-row {display:grid; grid-template-columns:1fr 1fr; gap:15px;}
         .history-modal-content ul {padding-left:28px;}
-        @media (max-width:768px) {
-            .form-row {grid-template-columns:1fr;}
-            .stats-grid {grid-template-columns:1fr;}
-        }
+        @media (max-width:768px) {.form-row {grid-template-columns:1fr;} .stats-grid {grid-template-columns:1fr;}}
     </style>
 </head>
 <body>
@@ -114,35 +84,33 @@
             <div class="stat-card"><div class="stat-number" id="qualifiedLeads">0</div><div class="stat-label">Qualified</div></div>
             <div class="stat-card"><div class="stat-number" id="convertedLeads">0</div><div class="stat-label">Converted</div></div>
         </div>
-        <!-- MAIN CRM -->
         <div id="actionButtons" style="display: none; margin-bottom:12px;">
             <button class="btn" onclick="showAddLeadModal()">Add New Lead</button>
         </div>
-        <!-- LEADS TABLE -->
         <div class="leads-section" id="leadsSection" style="display: none;">
             <h2>Your Leads</h2>
-            <!-- Search and Filter -->
-<div style="margin: 16px 0 4px 0; display: flex; flex-wrap: wrap; gap: 12px;">
-    <input type="text" id="searchInput" placeholder="Search by Name / Email / Company" style="flex: 2; min-width:150px;"/>
-    <select id="statusFilter" style="flex:1; min-width:110px;">
-        <option value="">All Status</option>
-        <option value="New">New</option>
-        <option value="Contacted">Contacted</option>
-        <option value="Qualified">Qualified</option>
-        <option value="Converted">Converted</option>
-        <option value="Lost">Lost</option>
-        <option value="Deleted">Deleted</option>
-    </select>
-    <select id="ownerFilter" style="flex:1; min-width:120px;"></select>
-    <button class="btn btn-secondary" onclick="refreshLeads()">Refresh</button>
-</div>
-
+            <!-- Search and Filter row -->
+            <div style="margin: 16px 0 4px 0; display: flex; flex-wrap: wrap; gap: 12px;">
+                <input type="text" id="searchInput" placeholder="Search by Name / Email / Company" style="flex: 2; min-width:150px;"/>
+                <select id="statusFilter" style="flex:1; min-width:110px;">
+                    <option value="">All Status</option>
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Converted">Converted</option>
+                    <option value="Lost">Lost</option>
+                    <option value="Deleted">Deleted</option>
+                </select>
+                <select id="ownerFilter" style="flex:1; min-width:120px;"></select>
+                <button class="btn btn-secondary" onclick="refreshLeads()">Refresh</button>
+            </div>
+            <!-- Leads Table + Pagination -->
             <div id="leadsTableContainer"></div>
             <div class="pagination" id="paginationBar"></div>
         </div>
     </div>
 </div>
-<!-- Add / Edit & History Modal -->
+<!-- Add/Edit Modal -->
 <div id="addLeadModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -202,6 +170,7 @@
         </form>
     </div>
 </div>
+<!-- History Modal -->
 <div id="historyModal" class="modal">
     <div class="modal-content history-modal-content">
         <div class="modal-header">
@@ -212,70 +181,17 @@
     </div>
 </div>
 <script>
-let spreadsheetId = '1nNa4CCaKh91O89jv8QjVEA--VSE8TsxfoShEgyWzjhw'; // <-- PUT YOUR SHEET ID HERE
-let apiKey = 'AIzaSyBDdJCtXwB-R5peCOqXV7V2Gr-lFr0urbw';                // <-- PUT YOUR API KEY HERE
+let spreadsheetId = 'YOUR_SPREADSHEET_ID'; // <-- PUT YOUR SHEET ID HERE (from URL after "/d/")
+let apiKey = 'YOUR_API_KEY';                // <-- PUT YOUR API KEY HERE
 let leads = [];
 let allUsers = [];
 let currentUser = null;
 let isAdmin = false;
 let pageSize = 10, currentPage = 1;
 let editingLeadIndex = null;
-let searchTerm = '';
-let statusTerm = '';
-let ownerTerm = '';
+let searchTerm = '', statusTerm = '', ownerTerm = '';
+let autoRefreshTimer = null;
 
-// Attach listeners to the search & filter fields
-function setupFiltersAndRefresh() {
-    document.getElementById('searchInput').oninput = function() {
-        searchTerm = this.value.toLowerCase();
-        applyFiltersAndRender();
-    };
-    document.getElementById('statusFilter').onchange = function() {
-        statusTerm = this.value;
-        applyFiltersAndRender();
-    };
-    document.getElementById('ownerFilter').onchange = function() {
-        ownerTerm = this.value;
-        applyFiltersAndRender();
-    };
-}
-
-// Fill the Owner dropdown with available owners from leads
-function populateOwnerFilter(leadsList) {
-    const sel = document.getElementById('ownerFilter');
-    if (!sel) return;
-    const ownersSet = new Set(leadsList.map(l => l.owner).filter(Boolean));
-    sel.innerHTML = `<option value="">All Owners</option>` + 
-        [...ownersSet].map(o => `<option value="${o}">${o}</option>`).join('');
-}
-
-// Filter the leads array according to current state
-function applyFiltersAndRender() {
-    let viewLeads = leads;
-    if (searchTerm) {
-        viewLeads = viewLeads.filter(l =>
-            (l.name && l.name.toLowerCase().includes(searchTerm)) ||
-            (l.email && l.email.toLowerCase().includes(searchTerm)) ||
-            (l.company && l.company.toLowerCase().includes(searchTerm))
-        );
-    }
-    if (statusTerm) {
-        viewLeads = viewLeads.filter(l => l.status === statusTerm);
-    }
-    if (ownerTerm) {
-        viewLeads = viewLeads.filter(l => l.owner === ownerTerm);
-    }
-    // If using role-based filtering as in your script:
-    if (!isAdmin) {
-        viewLeads = viewLeads.filter(
-            l => l.project === currentUser.project && l.owner === currentUser.username
-        );
-    }
-    renderLeadsTable(viewLeads);
-    updateStats(viewLeads);
-}
-
-// --- Helper ---
 function showAlert(message, type) {
     const el = document.getElementById('alertContainer');
     const c = type=='error' ? 'alert-error': type=='success'?'alert-success':'alert-info';
@@ -285,13 +201,11 @@ function showAlert(message, type) {
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function openModal(id) { document.getElementById(id).style.display = 'block'; }
 
-// --- LOGIN LOGIC ---
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     try {
-        // Fetch all users/roles from Sheet2
         const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet2!A2:D?key=${apiKey}`);
         const data = await resp.json();
         if (!data.values) return showAlert('Login failed: No users found', 'error');
@@ -311,10 +225,12 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         document.getElementById('currentUserLabel').innerText = `Logged in as: ${currentUser.username} (${currentUser.role})`
         setupFiltersAndRefresh();
         loadLeads();
+        startAutoRefresh();
     } catch(e){ showAlert('Server error','error'); }
 });
 
 function logout() {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
     currentUser = null;
     isAdmin = false;
     document.getElementById('loginSection').style.display='block';
@@ -322,46 +238,23 @@ function logout() {
     document.getElementById('leadsSection').style.display='none';
     document.getElementById('statsGrid').style.display='none';
     document.getElementById('userInfoBar').style.display='none';
-    pageSize = 10; currentPage = 1; editingLeadIndex = null;
+    pageSize = 10;
+    currentPage = 1;
+    editingLeadIndex = null;
     document.getElementById('searchInput').value = '';
     document.getElementById('statusFilter').value = '';
     document.getElementById('ownerFilter').value = '';
-    searchTerm = '';
-    statusTerm = '';
-    ownerTerm = '';
-
+    searchTerm = statusTerm = ownerTerm = '';
 }
 
-// --- LOADING LEADS ---
-async function loadLeads() {
-    try {
-        const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A2:K?key=${apiKey}`);
-        const data = await resp.json();
-        let leadsRaw = data.values || [];
-        leads = leadsRaw.map((row, idx) => ({
-            index: idx+2, // For editing/deleting by row
-            name: row[0]||"", email: row[1]||"", phone: row[2]||"", company: row[3]||"",
-            status: row[4]||"New", source: row[5]||"", notes: row[6]||"", dateAdded:row[7]||"",
-            owner: row[8]||"", project: row[9]||"", history: row[10]||"[]"
-        }));
-        populateOwnerFilter(leads);
-        applyFiltersAndRender();   // -- this will handle showing the filtered/paged table and stats
+function refreshLeads() { showAlert('Refreshing leads...', 'info'); loadLeads(); }
 
-        // FILTER for user
-        let filtered = leads;
-        if (!isAdmin) {
-            // Project Heads see only their project's leads and those assigned to them
-            filtered = leads.filter(l => l.project === currentUser.project && l.owner === currentUser.username);
-        }
-        populateOwnerFilter(leads);
-        applyFiltersAndRender();
-    } catch(e) { showAlert('Error loading leads!','error'); }
+function startAutoRefresh() {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    autoRefreshTimer = setInterval(loadLeads, 60000); // every 1 minute
 }
-let searchTerm = '';
-let statusTerm = '';
-let ownerTerm = '';
 
-// Attach listeners after login renders the page
+// ------- FILTER FUNCTIONS -------
 function setupFiltersAndRefresh() {
     document.getElementById('searchInput').oninput = function() {
         searchTerm = this.value.toLowerCase();
@@ -376,43 +269,51 @@ function setupFiltersAndRefresh() {
         applyFiltersAndRender();
     };
 }
-
-// Call this in your login or after fetching users:
-function populateOwnerFilter(users, leadsList) {
+function populateOwnerFilter(leadsList) {
     const sel = document.getElementById('ownerFilter');
     if (!sel) return;
     const ownersSet = new Set(leadsList.map(l => l.owner).filter(Boolean));
     sel.innerHTML = `<option value="">All Owners</option>` + 
         [...ownersSet].map(o => `<option value="${o}">${o}</option>`).join('');
 }
-
 function applyFiltersAndRender() {
     let viewLeads = leads;
-    if (searchTerm)
-        viewLeads = viewLeads.filter(l =>
-            (l.name && l.name.toLowerCase().includes(searchTerm)) ||
-            (l.email && l.email.toLowerCase().includes(searchTerm)) ||
-            (l.company && l.company.toLowerCase().includes(searchTerm))
-        );
-    if (statusTerm)
-        viewLeads = viewLeads.filter(l => l.status === statusTerm);
-    if (ownerTerm)
-        viewLeads = viewLeads.filter(l => l.owner === ownerTerm);
-
-    let filtered = viewLeads;
-    if (!isAdmin && filtered.length)
-        filtered = filtered.filter(l => l.project === currentUser.project && l.owner === currentUser.username);
-
-    renderLeadsTable(filtered);
-    updateStats(filtered);
+    if (searchTerm) viewLeads = viewLeads.filter(l =>
+        (l.name && l.name.toLowerCase().includes(searchTerm)) ||
+        (l.email && l.email.toLowerCase().includes(searchTerm)) ||
+        (l.company && l.company.toLowerCase().includes(searchTerm))
+    );
+    if (statusTerm) viewLeads = viewLeads.filter(l => l.status === statusTerm);
+    if (ownerTerm) viewLeads = viewLeads.filter(l => l.owner === ownerTerm);
+    if (!isAdmin) viewLeads = viewLeads.filter(
+        l => l.project === currentUser.project && l.owner === currentUser.username
+    );
+    renderLeadsTable(viewLeads);
+    updateStats(viewLeads);
 }
 
-// --- TABLE + PAGINATION ---
+// --------- LOAD LEADS/CRM -----------
+async function loadLeads() {
+    try {
+        const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A2:K?key=${apiKey}`);
+        const data = await resp.json();
+        let leadsRaw = data.values || [];
+        leads = leadsRaw.map((row, idx) => ({
+            index: idx+2, // Row # for update/delete
+            name: row[0]||"", email: row[1]||"", phone: row[2]||"", company: row[3]||"",
+            status: row[4]||"New", source: row[5]||"", notes: row[6]||"", dateAdded:row[7]||"",
+            owner: row[8]||"", project: row[9]||"", history: row[10]||"[]"
+        }));
+        populateOwnerFilter(leads);
+        applyFiltersAndRender();
+    } catch(e) { showAlert('Error loading leads!','error'); }
+}
+
+// --- PAGINATION & TABLE
 function renderLeadsTable(viewLeads) {
     let totalPages = Math.ceil(viewLeads.length / pageSize) || 1;
     if(currentPage > totalPages) currentPage = totalPages;
     let paged = viewLeads.slice((currentPage-1)*pageSize, currentPage*pageSize);
-
     const th = `<tr>
         <th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Status</th>
         <th>Source</th><th>Notes</th><th>Date Added</th><th>Owner</th><th>Project</th>
@@ -436,28 +337,21 @@ function renderLeadsTable(viewLeads) {
         </td>
     </tr>`).join('');
     document.getElementById('leadsTableContainer').innerHTML = `<table class="leads-table">${th}${trs}</table>`;
-
-    // Pagination bar
     let pageBtns = '';
     for(let p=1; p <= totalPages; p++)
         pageBtns += `<button onclick="gotoPage(${p})" ${p==currentPage?'style="font-weight:bold;"':''}>${p}</button>`;
     document.getElementById('paginationBar').innerHTML = pageBtns;
 }
-function gotoPage(p) { currentPage=p; loadLeads(); }
+function gotoPage(p) { currentPage=p; applyFiltersAndRender(); }
 
-// --- STATS ---
 function updateStats(viewLeads) {
-    const total = viewLeads.length;
-    const newLeads=viewLeads.filter(l=>l.status==='New').length;
-    const qualified=viewLeads.filter(l=>l.status==='Qualified').length;
-    const converted=viewLeads.filter(l=>l.status==='Converted').length;
-    document.getElementById('totalLeads').innerText=total;
-    document.getElementById('newLeads').innerText=newLeads;
-    document.getElementById('qualifiedLeads').innerText=qualified;
-    document.getElementById('convertedLeads').innerText=converted;
+    document.getElementById('totalLeads').innerText = viewLeads.length;
+    document.getElementById('newLeads').innerText = viewLeads.filter(l=>l.status==='New').length;
+    document.getElementById('qualifiedLeads').innerText = viewLeads.filter(l=>l.status==='Qualified').length;
+    document.getElementById('convertedLeads').innerText = viewLeads.filter(l=>l.status==='Converted').length;
 }
 
-// --- LEAD FORM ADD/EDIT ---
+// ------ ADD / EDIT -----
 function showAddLeadModal() {
     editingLeadIndex = null;
     document.getElementById('leadFormTitle').textContent = "Add New Lead";
@@ -465,7 +359,6 @@ function showAddLeadModal() {
     document.getElementById('addLeadForm').reset();
     openModal('addLeadModal');
 }
-
 async function editLead(rowIndex) {
     const lead = leads.find(l => l.index === rowIndex);
     if (!lead) return showAlert('Lead not found', 'error');
@@ -481,7 +374,6 @@ async function editLead(rowIndex) {
     document.getElementById('leadNotes').value = lead.notes;
     openModal('addLeadModal');
 }
-
 document.getElementById('addLeadForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const ld = {
@@ -539,8 +431,7 @@ document.getElementById('addLeadForm').addEventListener('submit', async function
     }
     editingLeadIndex=null;
 });
-
-// --- DELETE LEAD ---
+// ------ DELETE (soft, sets fields to blank/Deleted) ------
 async function deleteLead(rowIndex) {
     if (!confirm('Are you sure you want to delete this lead?')) return;
     let leadIdx = leads.findIndex(l=>l.index===rowIndex);
@@ -563,7 +454,7 @@ async function deleteLead(rowIndex) {
     }catch(e){ showAlert('Delete failed','error'); }
 }
 
-// --- HISTORY MODAL ---
+// -------- HISTORY MODAL --------
 function showHistory(rowIndex) {
     const lead = leads.find(l=>l.index===rowIndex);
     if(!lead) return showAlert('No history found','info');
@@ -577,7 +468,6 @@ function showHistory(rowIndex) {
     openModal('historyModal');
 }
 
-// --- MODAL OUTSIDE CLICK ---
 window.onclick = function(event) {
     for(let modal of document.getElementsByClassName('modal'))
         if(event.target===modal) modal.style.display='none';
