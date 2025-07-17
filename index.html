@@ -121,6 +121,22 @@
         <!-- LEADS TABLE -->
         <div class="leads-section" id="leadsSection" style="display: none;">
             <h2>Your Leads</h2>
+            <!-- Search and Filter -->
+<div style="margin: 16px 0 4px 0; display: flex; flex-wrap: wrap; gap: 12px;">
+    <input type="text" id="searchInput" placeholder="Search by Name / Email / Company" style="flex: 2; min-width:150px;"/>
+    <select id="statusFilter" style="flex:1; min-width:110px;">
+        <option value="">All Status</option>
+        <option value="New">New</option>
+        <option value="Contacted">Contacted</option>
+        <option value="Qualified">Qualified</option>
+        <option value="Converted">Converted</option>
+        <option value="Lost">Lost</option>
+        <option value="Deleted">Deleted</option>
+    </select>
+    <select id="ownerFilter" style="flex:1; min-width:120px;"></select>
+    <button class="btn btn-secondary" onclick="refreshLeads()">Refresh</button>
+</div>
+
             <div id="leadsTableContainer"></div>
             <div class="pagination" id="paginationBar"></div>
         </div>
@@ -204,6 +220,60 @@ let currentUser = null;
 let isAdmin = false;
 let pageSize = 10, currentPage = 1;
 let editingLeadIndex = null;
+let searchTerm = '';
+let statusTerm = '';
+let ownerTerm = '';
+
+// Attach listeners to the search & filter fields
+function setupFiltersAndRefresh() {
+    document.getElementById('searchInput').oninput = function() {
+        searchTerm = this.value.toLowerCase();
+        applyFiltersAndRender();
+    };
+    document.getElementById('statusFilter').onchange = function() {
+        statusTerm = this.value;
+        applyFiltersAndRender();
+    };
+    document.getElementById('ownerFilter').onchange = function() {
+        ownerTerm = this.value;
+        applyFiltersAndRender();
+    };
+}
+
+// Fill the Owner dropdown with available owners from leads
+function populateOwnerFilter(leadsList) {
+    const sel = document.getElementById('ownerFilter');
+    if (!sel) return;
+    const ownersSet = new Set(leadsList.map(l => l.owner).filter(Boolean));
+    sel.innerHTML = `<option value="">All Owners</option>` + 
+        [...ownersSet].map(o => `<option value="${o}">${o}</option>`).join('');
+}
+
+// Filter the leads array according to current state
+function applyFiltersAndRender() {
+    let viewLeads = leads;
+    if (searchTerm) {
+        viewLeads = viewLeads.filter(l =>
+            (l.name && l.name.toLowerCase().includes(searchTerm)) ||
+            (l.email && l.email.toLowerCase().includes(searchTerm)) ||
+            (l.company && l.company.toLowerCase().includes(searchTerm))
+        );
+    }
+    if (statusTerm) {
+        viewLeads = viewLeads.filter(l => l.status === statusTerm);
+    }
+    if (ownerTerm) {
+        viewLeads = viewLeads.filter(l => l.owner === ownerTerm);
+    }
+    // If using role-based filtering as in your script:
+    if (!isAdmin) {
+        viewLeads = viewLeads.filter(
+            l => l.project === currentUser.project && l.owner === currentUser.username
+        );
+    }
+    renderLeadsTable(viewLeads);
+    updateStats(viewLeads);
+}
 
 // --- Helper ---
 function showAlert(message, type) {
@@ -239,6 +309,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         document.getElementById('statsGrid').style.display='grid';
         document.getElementById('userInfoBar').style.display='block';
         document.getElementById('currentUserLabel').innerText = `Logged in as: ${currentUser.username} (${currentUser.role})`
+        setupFiltersAndRefresh();
         loadLeads();
     } catch(e){ showAlert('Server error','error'); }
 });
@@ -252,6 +323,13 @@ function logout() {
     document.getElementById('statsGrid').style.display='none';
     document.getElementById('userInfoBar').style.display='none';
     pageSize = 10; currentPage = 1; editingLeadIndex = null;
+    document.getElementById('searchInput').value = '';
+    document.getElementById('statusFilter').value = '';
+    document.getElementById('ownerFilter').value = '';
+    searchTerm = '';
+    statusTerm = '';
+    ownerTerm = '';
+
 }
 
 // --- LOADING LEADS ---
@@ -266,15 +344,67 @@ async function loadLeads() {
             status: row[4]||"New", source: row[5]||"", notes: row[6]||"", dateAdded:row[7]||"",
             owner: row[8]||"", project: row[9]||"", history: row[10]||"[]"
         }));
+        populateOwnerFilter(leads);
+        applyFiltersAndRender();   // -- this will handle showing the filtered/paged table and stats
+
         // FILTER for user
         let filtered = leads;
         if (!isAdmin) {
             // Project Heads see only their project's leads and those assigned to them
             filtered = leads.filter(l => l.project === currentUser.project && l.owner === currentUser.username);
         }
-        renderLeadsTable(filtered);
-        updateStats(filtered);
+        populateOwnerFilter(leads);
+        applyFiltersAndRender();
     } catch(e) { showAlert('Error loading leads!','error'); }
+}
+let searchTerm = '';
+let statusTerm = '';
+let ownerTerm = '';
+
+// Attach listeners after login renders the page
+function setupFiltersAndRefresh() {
+    document.getElementById('searchInput').oninput = function() {
+        searchTerm = this.value.toLowerCase();
+        applyFiltersAndRender();
+    };
+    document.getElementById('statusFilter').onchange = function() {
+        statusTerm = this.value;
+        applyFiltersAndRender();
+    };
+    document.getElementById('ownerFilter').onchange = function() {
+        ownerTerm = this.value;
+        applyFiltersAndRender();
+    };
+}
+
+// Call this in your login or after fetching users:
+function populateOwnerFilter(users, leadsList) {
+    const sel = document.getElementById('ownerFilter');
+    if (!sel) return;
+    const ownersSet = new Set(leadsList.map(l => l.owner).filter(Boolean));
+    sel.innerHTML = `<option value="">All Owners</option>` + 
+        [...ownersSet].map(o => `<option value="${o}">${o}</option>`).join('');
+}
+
+function applyFiltersAndRender() {
+    let viewLeads = leads;
+    if (searchTerm)
+        viewLeads = viewLeads.filter(l =>
+            (l.name && l.name.toLowerCase().includes(searchTerm)) ||
+            (l.email && l.email.toLowerCase().includes(searchTerm)) ||
+            (l.company && l.company.toLowerCase().includes(searchTerm))
+        );
+    if (statusTerm)
+        viewLeads = viewLeads.filter(l => l.status === statusTerm);
+    if (ownerTerm)
+        viewLeads = viewLeads.filter(l => l.owner === ownerTerm);
+
+    let filtered = viewLeads;
+    if (!isAdmin && filtered.length)
+        filtered = filtered.filter(l => l.project === currentUser.project && l.owner === currentUser.username);
+
+    renderLeadsTable(filtered);
+    updateStats(filtered);
 }
 
 // --- TABLE + PAGINATION ---
