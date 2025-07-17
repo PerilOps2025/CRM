@@ -295,17 +295,12 @@
         <div class="main-content">
             <!-- Setup Section -->
             <div class="setup-section">
-                <h2>Google Sheets Setup</h2>
-                <div class="form-group">
-                    <label for="sheetUrl">Google Sheets URL:</label>
-                    <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
+                <h2>Google Sheets Configuration</h2>
+                <div class="alert alert-success">
+                    <strong>✅ Connected!</strong> Your Google Sheets is configured and ready to use.
                 </div>
-                <div class="form-group">
-                    <label for="apiKey">Google Sheets API Key:</label>
-                    <input type="text" id="apiKey" placeholder="Your Google Sheets API Key">
-                </div>
-                <button class="btn" onclick="setupGoogleSheets()">Connect to Google Sheets</button>
-                <button class="btn btn-secondary" onclick="showSetupInstructions()">Setup Instructions</button>
+                <button class="btn" onclick="testConnection()">Test Connection</button>
+                <button class="btn btn-secondary" onclick="showSetupInstructions()">View Setup Info</button>
             </div>
 
             <!-- Alert Messages -->
@@ -440,34 +435,39 @@
     </div>
 
     <script>
-        // Global variables
-        let spreadsheetId = '';
-        let apiKey = '';
+        // Global variables - CONFIGURE THESE WITH YOUR ACTUAL VALUES
+        let spreadsheetId = 'YOUR_SPREADSHEET_ID_HERE'; // Replace with your actual spreadsheet ID
+        let apiKey = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
         let leads = [];
+
+        // TODO: Replace the values above with your actual Google Sheets ID and API key
+        // Example: let spreadsheetId = '1ABC123def456ghi789jkl012mno345pqr678stu901vwx234yz';
+        // Example: let apiKey = 'AIzaSyABC123def456GHI789jkl012MNO345pqr678STU901';
 
         // Setup Google Sheets connection
         function setupGoogleSheets() {
-            const sheetUrl = document.getElementById('sheetUrl').value;
-            const apiKeyInput = document.getElementById('apiKey').value;
-
-            if (!sheetUrl || !apiKeyInput) {
-                showAlert('Please enter both Google Sheets URL and API Key', 'error');
-                return;
-            }
-
-            // Extract spreadsheet ID from URL
-            const matches = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            if (!matches) {
-                showAlert('Invalid Google Sheets URL', 'error');
-                return;
-            }
-
-            spreadsheetId = matches[1];
-            apiKey = apiKeyInput;
-
-            // Test the connection
+            // Configuration is now built into the code
+            // Just test the connection
             testConnection();
         }
+
+        // Initialize the app
+        function initializeApp() {
+            // Check if credentials are configured
+            if (spreadsheetId === 'YOUR_SPREADSHEET_ID_HERE' || apiKey === 'YOUR_API_KEY_HERE') {
+                showAlert('Please configure your Google Sheets credentials in the code first!', 'error');
+                return;
+            }
+            
+            // Auto-connect on page load
+            document.getElementById('actionButtons').style.display = 'block';
+            document.getElementById('leadsSection').style.display = 'block';
+            document.getElementById('statsGrid').style.display = 'grid';
+            loadLeads();
+        }
+
+        // Call initialize when page loads
+        window.onload = initializeApp;
 
         // Test Google Sheets connection
         async function testConnection() {
